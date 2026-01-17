@@ -29,25 +29,56 @@ internal static class XmlNodeExtensions
     public static T? GetAttributeValue<T>(this XmlNode node, string attributeName) where T : struct
     {
         var attribute = node.Attributes?[attributeName]?.Value;
-        if (attribute == null)
+        if (string.IsNullOrWhiteSpace(attribute))
             return null;
 
         if (typeof(T) == typeof(bool))
-            return (T)(object)bool.Parse(attribute);
+        {
+            if (bool.TryParse(attribute, out var v)) return (T)(object)v;
+            return null;
+        }
+
         if (typeof(T) == typeof(uint))
-            return (T)(object)uint.Parse(attribute);
+        {
+            if (uint.TryParse(attribute, out var v)) return (T)(object)v;
+            return null;
+        }
+
         if (typeof(T) == typeof(int))
-            return (T)(object)int.Parse(attribute);
+        {
+            if (int.TryParse(attribute, out var v)) return (T)(object)v;
+            return null;
+        }
+
         if (typeof(T) == typeof(long))
-            return (T)(object)long.Parse(attribute);
+        {
+            if (long.TryParse(attribute, out var v)) return (T)(object)v;
+            return null;
+        }
+
         if (typeof(T) == typeof(ulong))
-            return (T)(object)ulong.Parse(attribute);
+        {
+            if (ulong.TryParse(attribute, out var v)) return (T)(object)v;
+            return null;
+        }
+
         if (typeof(T) == typeof(double))
-            return (T)(object)double.Parse(attribute);
+        {
+            if (double.TryParse(attribute, out var v)) return (T)(object)v;
+            return null;
+        }
+
         if (typeof(T) == typeof(TimeSpan))
-            return (T)(object)XmlConvert.ToTimeSpan(attribute);
+        {
+            try { return (T)(object)XmlConvert.ToTimeSpan(attribute); }
+            catch { return null; }
+        }
+
         if (typeof(T) == typeof(DateTime))
-            return (T)(object)DateTime.Parse(attribute);
+        {
+            if (DateTime.TryParse(attribute, out var v)) return (T)(object)v;
+            return null;
+        }
 
         return null;
     }
